@@ -3,65 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pehia - Queue Management System [FULLY FUNCTIONAL]</title>
+    <title>pehia - Queue Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
         }
-
-        /* Animations */
-        @keyframes slideInDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes slideInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeInScale {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); }
-            50% { box-shadow: 0 0 25px rgba(236, 72, 153, 0.8); }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-
-        @keyframes bounce-soft {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes rotate-in {
-            from { transform: rotate(-5deg) scale(0.95); opacity: 0; }
-            to { transform: rotate(0) scale(1); opacity: 1; }
-        }
-
-        /* General Animations */
+        
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #f9f1f8 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .animate-fade-up {
+            animation: fadeInUp 0.5s ease-out;
         }
         
         .sidebar-item {
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
             overflow: hidden;
         }
-
+        
         .sidebar-item::before {
             content: '';
             position: absolute;
@@ -72,22 +65,20 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
-
+        
         .sidebar-item:hover::before {
             left: 100%;
         }
         
         .sidebar-item:hover {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(249, 115, 115, 0.1) 100%);
-            color: #ec4899;
             transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
         }
         
         .sidebar-item.active {
-            background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4);
-            animation: pulse-glow 2s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
         
         .sidebar-item.active i {
@@ -95,90 +86,49 @@
         }
         
         .card-hover {
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: slideInUp 0.5s ease-out;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
         
         .token-card {
-            background: linear-gradient(135deg, #ec4899 0%, #f97316 50%, #fca5a5 100%);
-            animation: fadeInScale 0.5s ease-out;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: pulse 2s ease-in-out infinite;
         }
-
+        
         button {
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        button:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+        
+        button:active {
+            transform: scale(0.98);
         }
         
         .status-badge {
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
             font-size: 0.75rem;
-            font-weight: 500;
-            animation: fadeInScale 0.4s ease-out;
-            transition: all 0.3s ease;
-        }
-
-        .status-badge:hover {
-            transform: scale(1.1);
+            font-weight: 600;
         }
         
         .status-waiting { 
-            background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
             color: #92400e;
-            box-shadow: 0 4px 10px rgba(250, 204, 21, 0.3);
         }
         .status-in-progress { 
             background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
             color: #1e40af;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
         .status-completed { 
             background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
             color: #065f46;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
         }
         .status-cancelled { 
             background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
             color: #991b1b;
-            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-        }
-        
-        .kiosk-mode .text-2xl {
-            font-size: 2rem;
-        }
-        
-        .kiosk-mode button, .kiosk-mode .btn {
-            padding: 1rem 2rem;
-            font-size: 1.25rem;
         }
         
         .modal {
@@ -188,335 +138,302 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
             z-index: 1000;
-            animation: fadeInScale 0.3s ease-out;
         }
         
         .modal.active {
             display: flex;
-        }
-
-        .modal.active > div {
-            animation: slideInDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 1rem;
+            padding: 1rem 1.5rem;
             background: white;
             border-radius: 0.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             z-index: 1001;
             transform: translateX(400px);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-left: 4px solid #3b82f6;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .notification.show {
             transform: translateX(0);
-            animation: slideInDown 0.4s ease-out;
         }
         
         .notification.success { 
-            border-left: 4px solid #10b981;
-            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
         }
         .notification.error { 
-            border-left: 4px solid #ef4444;
-            background: linear-gradient(135deg, #fef2f2 0%, #fff7f7 100%);
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
         }
         .notification.info { 
-            border-left: 4px solid #3b82f6;
-            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+            border-left-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         }
-
-        /* Card Animations */
-        .bg-white {
-            animation: slideInUp 0.4s ease-out;
+        
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
         }
-
-        /* Header animations */
-        h1, h2, h3, h4 {
-            animation: slideInDown 0.5s ease-out;
+        
+        .department-stat-card {
+            transition: all 0.3s;
         }
-
-        /* Icon animations */
-        i {
-            transition: all 0.3s ease;
+        
+        .department-stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-
-        .sidebar-item:hover i {
-            transform: scale(1.15) rotate(5deg);
+        
+        .disabled-btn {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-
-        /* Gradient backgrounds for different departments */
-        .dept-emergency {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ffb3ba 100%);
-        }
-
-        .dept-outpatient {
-            background: linear-gradient(135deg, #4ecdc4 0%, #a8edcc 100%);
-        }
-
-        .dept-ambulance {
-            background: linear-gradient(135deg, #ffa502 0%, #ffa502 50%, #ffb347 100%);
-        }
-
-        .dept-specialists {
-            background: linear-gradient(135deg, #c084fc 0%, #d8b4fe 100%);
-        }
-
-        /* Button gradients */
-        .btn-primary {
-            background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #db2777 0%, #ea580c 100%);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #6ee7b7 100%);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #059669 0%, #5eead4 100%);
-        }
-
-        /* Floating animation for cards */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .card-float {
-            animation: float 3s ease-in-out infinite;
+        
+        .disabled-btn:hover {
+            transform: none;
         }
     </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Notification System -->
+<body>
     <div id="notification" class="notification"></div>
     
     <!-- Login Modal -->
     <div id="loginModal" class="modal items-center justify-center">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full" style="animation: rotate-in 0.5s ease-out;">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full animate-fade-up">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h2 class="text-3xl font-bold bg-gradient-to-r from-pink-600 via-rose-500 to-red-500 bg-clip-text text-transparent">pehia</h2>
-                    <p class="text-sm text-gray-600 mt-2">Queue Management</p>
+                    <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">pehia</h1>
+                    <p class="text-sm text-gray-500 mt-1">Queue Management System</p>
                 </div>
-                <button onclick="closeModal('loginModal')" class="text-gray-500 hover:text-pink-600 text-2xl transition-colors">
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-600 text-2xl">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Staff Login</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Staff Login Required</h2>
             <form id="loginForm" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                    <input type="text" id="username" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all" placeholder="Enter username" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="username" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input" placeholder="Enter username" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="password" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all" placeholder="Enter password" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input" placeholder="Enter password" required>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-pink-600 to-orange-500 text-white py-2 rounded-lg hover:shadow-lg font-medium transition-all">Login</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2.5 rounded-lg hover:shadow-lg font-semibold">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login as Staff
+                </button>
             </form>
-            <div class="bg-gradient-to-r from-pink-50 to-peach-50 p-3 rounded-lg mt-4 text-xs text-gray-700 border border-pink-100">
-                <p class="font-semibold mb-2">Demo Credentials:</p>
-                <p><strong>Admin:</strong> admin / admin123</p>
-                <p><strong>Staff:</strong> staff / staff123</p>
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg mt-6 border border-indigo-100">
+                <p class="font-semibold text-sm text-gray-700 mb-2">📝 Demo Credentials:</p>
+                <p class="text-xs text-gray-600"><strong>Admin:</strong> admin / admin123</p>
+                <p class="text-xs text-gray-600"><strong>Staff:</strong> staff / staff123</p>
+                <p class="text-xs text-red-500 mt-2">⚠️ Only logged-in staff can register patients</p>
             </div>
         </div>
     </div>
     
     <!-- Main Container -->
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar - Navigation -->
-        <div class="w-64 bg-gradient-to-b from-white to-gray-50 shadow-xl flex flex-col h-full border-r-2 border-pink-100">
-            <div class="p-6 bg-gradient-to-r from-pink-600 via-rose-500 to-orange-500 text-white rounded-b-2xl">
-                <h1 class="text-3xl font-bold cursor-pointer" onclick="loadDashboard()" style="animation: bounce-soft 2s ease-in-out infinite;">pehia</h1>
-                <p class="text-xs mt-1 opacity-90">Queue Management System</p>
+        <!-- Sidebar -->
+        <div class="w-72 bg-white/95 backdrop-blur-sm shadow-2xl flex flex-col h-full">
+            <div class="p-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                <h1 class="text-3xl font-bold cursor-pointer" onclick="loadDashboard()">pehia</h1>
+                <p class="text-xs mt-2 opacity-90">Queue Management System</p>
             </div>
             
-            <div class="flex-1 px-4">
-                <!-- SERVICES Section -->
+            <div class="flex-1 overflow-y-auto px-4 py-6">
                 <div class="mb-6">
-                    <h2 class="text-xs font-semibold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent uppercase tracking-wider mb-3 mt-4">SERVICES</h2>
-                    <ul class="space-y-2">
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Emergency')">
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">DEPARTMENTS</h2>
+                    <ul class="space-y-1">
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Emergency')">
                             <i class="fas fa-stethoscope w-5 h-5 mr-3 text-red-500"></i>
                             Emergency
                         </li>
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Outpatient')">
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Outpatient')">
                             <i class="fas fa-procedures w-5 h-5 mr-3 text-green-500"></i>
                             Outpatient
                         </li>
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Ambulance')">
-                            <i class="fas fa-ambulance w-5 h-5 mr-3 text-orange-500"></i>
-                            Ambulance
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Cardiology')">
+                            <i class="fas fa-heartbeat w-5 h-5 mr-3 text-pink-500"></i>
+                            Cardiology
                         </li>
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Specialists')">
-                            <i class="fas fa-user-md w-5 h-5 mr-3 text-purple-500"></i>
-                            Specialists
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Pediatrics')">
+                            <i class="fas fa-child w-5 h-5 mr-3 text-yellow-500"></i>
+                            Pediatrics
+                        </li>
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="filterByDepartment('Orthopedics')">
+                            <i class="fas fa-bone w-5 h-5 mr-3 text-orange-500"></i>
+                            Orthopedics
                         </li>
                     </ul>
                 </div>
                 
-                <!-- QUEUES Section -->
                 <div class="mb-6">
-                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">QUEUES</h2>
-                    <ul class="space-y-2">
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg active" onclick="showCurrentToken()">
-                            <i class="fas fa-clock w-5 h-5 mr-3 text-gray-400"></i>
-                            Current Token
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">VIEWS</h2>
+                    <ul class="space-y-1">
+                        <li class="sidebar-item active flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="showTokenDisplay()">
+                            <i class="fas fa-clock w-5 h-5 mr-3"></i>
+                            Token Display
                         </li>
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="showDepartmentQueues()">
-                            <i class="fas fa-users w-5 h-5 mr-3 text-gray-400"></i>
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="showDepartmentQueues()">
+                            <i class="fas fa-users w-5 h-5 mr-3"></i>
                             Department Queues
                         </li>
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="showTokenStatus()">
-                            <i class="fas fa-qrcode w-5 h-5 mr-3 text-gray-400"></i>
-                            Token Status
-                        </li>
-                        <li class="sidebar-item flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg" onclick="showAnalytics()">
-                            <i class="fas fa-chart-bar w-5 h-5 mr-3 text-gray-400"></i>
+                        <li class="sidebar-item flex items-center px-3 py-2.5 text-sm text-gray-700 rounded-lg" onclick="showAnalytics()">
+                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
                             Analytics
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <!-- Bottom Section with Login Status -->
             <div class="p-4 border-t border-gray-200">
-                <div id="userInfo" class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user text-white text-sm"></i>
+                <div id="userInfo" class="flex items-center space-x-3 mb-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-user text-sm"></i>
                     </div>
                     <div>
-                        <p id="userName" class="text-sm font-medium text-gray-700">Not Logged In</p>
+                        <p id="userName" class="text-sm font-semibold text-gray-800">Not Logged In</p>
                         <p id="userRole" class="text-xs text-gray-500">Guest</p>
                     </div>
                 </div>
-                <button id="loginBtn" onclick="showLoginModal()" class="mt-3 w-full px-3 py-2 text-sm bg-gradient-to-r from-pink-600 to-orange-500 text-white rounded-lg hover:shadow-lg font-medium transition-all">
+                <button id="loginBtn" onclick="showLoginModal()" class="w-full px-3 py-2 text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:shadow-lg font-medium">
                     <i class="fas fa-sign-in-alt mr-2"></i>Staff Login
                 </button>
-                <button id="logoutBtn" onclick="logout()" class="mt-3 w-full px-3 py-2 text-sm bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:shadow-lg font-medium transition-all hidden">
+                <button id="logoutBtn" onclick="logout()" class="w-full px-3 py-2 text-sm bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:shadow-lg font-medium hidden">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </button>
+                <div id="registerBtnContainer" class="mt-3 hidden">
+                    <button onclick="showRegisterModal()" class="w-full px-3 py-2 text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-lg font-medium">
+                        <i class="fas fa-plus-circle mr-2"></i>Register New Patient
+                    </button>
+                </div>
             </div>
         </div>
         
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <div class="flex-1 overflow-y-auto">
-            <!-- Top Navigation Bar -->
-            <div class="bg-gradient-to-r from-white to-gray-50 shadow-sm px-8 py-4 flex items-center justify-between border-b-2 border-pink-100">
-                <div class="flex items-center space-x-4">
-                    <h2 id="dashboardTitle" class="text-lg font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">Queue Management Dashboard</h2>
-                    <span id="liveStatus" class="px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs font-medium rounded-full"><span class="w-2 h-2 bg-green-500 rounded-full mr-2 inline-block animate-pulse"></span>Live</span>
-                </div>
-                
-                <!-- Search Bar -->
-                <div class="flex-1 max-w-md mx-8">
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-500"></i>
-                        <input type="text" id="globalSearch" placeholder="🔍 Search patients, tokens..." 
-                               class="w-full pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"
-                               onkeyup="searchPatients(this.value)">
+            <div class="bg-white shadow-sm sticky top-0 z-10">
+                <div class="px-8 py-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <h2 id="dashboardTitle" class="text-xl font-bold text-gray-800">Token Display</h2>
+                        <span id="liveStatus" class="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>Live
+                        </span>
                     </div>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <button onclick="toggleKioskMode()" class="p-2 hover:bg-pink-100 rounded-full text-gray-600 hover:text-pink-600 transition-all" title="Kiosk Mode">
-                        <i class="fas fa-mobile-alt"></i>
-                    </button>
-                    <button onclick="refreshData()" class="p-2 hover:bg-pink-100 rounded-full text-gray-600 hover:text-pink-600 transition-all" title="Refresh">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button onclick="showRegisterModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-orange-500 text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all">
-                        <i class="fas fa-plus mr-2"></i>New Registration
-                    </button>
+                    
+                    <div class="flex-1 max-w-md mx-8">
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="globalSearch" placeholder="Search patients by name, phone, or token..." 
+                                   class="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input"
+                                   onkeyup="searchPatients(this.value)">
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <button onclick="toggleKioskMode()" class="p-2 hover:bg-gray-100 rounded-full text-gray-600" title="Kiosk Mode">
+                            <i class="fas fa-desktop text-lg"></i>
+                        </button>
+                        <button onclick="refreshData()" class="p-2 hover:bg-gray-100 rounded-full text-gray-600" title="Refresh">
+                            <i class="fas fa-sync-alt text-lg"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
-            <!-- Main Content -->
-            <div class="p-8" id="mainContent">
-                <!-- Dynamic content will be loaded here -->
-            </div>
+            <div class="p-8" id="mainContent"></div>
         </div>
     </div>
     
-    <!-- Registration Modal -->
+    <!-- Registration Modal (Only accessible to logged-in staff) -->
     <div id="registerModal" class="modal items-center justify-center">
-        <div class="bg-white rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto" style="animation: slideInDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fade-up">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">Patient Registration</h2>
-                <button onclick="closeModal('registerModal')" class="text-gray-500 hover:text-pink-600 transition-colors">
-                    <i class="fas fa-times text-2xl"></i>
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Patient Registration</h2>
+                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <form id="registrationForm" class="space-y-4" onsubmit="registerPatient(event)">
+            <form id="registrationForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
-                        <input type="text" id="firstName" required class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                        <input type="text" id="firstName" required pattern="[A-Za-z\s]{2,50}" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input" placeholder="Enter first name">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
-                        <input type="text" id="lastName" required class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                        <input type="text" id="lastName" required pattern="[A-Za-z\s]{2,50}" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input" placeholder="Enter last name">
                     </div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth *</label>
-                    <input type="date" id="dob" required class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth *</label>
+                    <input type="date" id="dob" required class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
-                    <input type="tel" id="phone" required pattern="[0-9]{10}" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all" placeholder="10 digit number">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                    <div class="flex space-x-2">
+                        <select id="countryCode" class="px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500" style="width: 100px;">
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+61">🇦🇺 +61</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+49">🇩🇪 +49</option>
+                        </select>
+                        <input type="tel" id="phone" required pattern="[0-9]{10}" class="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input" placeholder="Enter 10-digit phone number">
+                    </div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" id="email" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 form-input" placeholder="patient@example.com">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Department *</label>
-                    <select id="department" required class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Department *</label>
+                    <select id="department" required class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500">
                         <option value="">Select Department</option>
-                        <option value="Emergency">Emergency</option>
-                        <option value="Outpatient">Outpatient</option>
-                        <option value="Cardiology">Cardiology</option>
-                        <option value="Pediatrics">Pediatrics</option>
-                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Emergency">🚨 Emergency</option>
+                        <option value="Outpatient">🏥 Outpatient</option>
+                        <option value="Cardiology">❤️ Cardiology</option>
+                        <option value="Pediatrics">👶 Pediatrics</option>
+                        <option value="Orthopedics">🦴 Orthopedics</option>
                     </select>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Doctor (Optional)</label>
-                    <select id="doctor" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all">
-                        <option value="">Any Available Doctor</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Assign Doctor *</label>
+                    <select id="doctor" required class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500">
+                        <option value="">Select Doctor</option>
                     </select>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Symptoms/Notes</label>
-                    <textarea id="notes" rows="3" class="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"></textarea>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Symptoms/Notes</label>
+                    <textarea id="notes" rows="3" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500" placeholder="Describe symptoms or any additional notes..."></textarea>
                 </div>
                 
                 <div class="flex space-x-3 pt-4">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-pink-600 to-orange-500 text-white py-2 rounded-lg hover:shadow-lg font-medium transition-all">
-                        <i class="fas fa-check mr-2"></i>Register & Generate Token
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2.5 rounded-lg hover:shadow-lg font-medium">
+                        <i class="fas fa-check-circle mr-2"></i>Register & Generate Token
                     </button>
-                    <button type="button" onclick="closeModal('registerModal')" class="flex-1 bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700 py-2 rounded-lg hover:shadow-lg font-medium transition-all">
+                    <button type="button" onclick="closeModal('registerModal')" class="flex-1 bg-gray-200 text-gray-700 py-2.5 rounded-lg hover:bg-gray-300 font-medium">
                         <i class="fas fa-times mr-2"></i>Cancel
                     </button>
                 </div>
@@ -526,35 +443,28 @@
     
     <!-- Token Details Modal -->
     <div id="tokenModal" class="modal items-center justify-center">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full" style="animation: slideInDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold bg-gradient-to-r from-pink-600 to-orange-500 bg-clip-text text-transparent">Token Details</h2>
-                <button onclick="closeModal('tokenModal')" class="text-gray-500 hover:text-pink-600 transition-colors">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-            </div>
-            <div id="tokenDetails" class="space-y-4">
-                <!-- Token details will be inserted here -->
-            </div>
-        </div>
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full animate-fade-up" id="tokenDetailsContainer"></div>
     </div>
 
     <script>
         // Data Storage
         let patients = JSON.parse(localStorage.getItem('patients')) || [];
         let tokens = JSON.parse(localStorage.getItem('tokens')) || [];
-        let staff = JSON.parse(localStorage.getItem('staff')) || [
-            { id: 1, name: 'Dr. Charlie Yates', department: 'Emergency', status: 'on-duty' },
-            { id: 2, name: 'Dr. Emanuel Rojas', department: 'Cardiology', status: 'on-duty' },
-            { id: 3, name: 'Dr. Kyle Letendre', department: 'Pediatrics', status: 'break' },
-            { id: 4, name: 'Dr. Jeroen Eerden', department: 'Outpatient', status: 'on-duty' },
-            { id: 5, name: 'Dr. Dmitry Stolz', department: 'Emergency', status: 'on-duty' }
+        let staff = [
+            { id: 1, name: 'Dr. Charlie Yates', department: 'Emergency', status: 'on-duty', specialty: 'Emergency Medicine' },
+            { id: 2, name: 'Dr. Emanuel Rojas', department: 'Cardiology', status: 'on-duty', specialty: 'Cardiology' },
+            { id: 3, name: 'Dr. Kyle Letendre', department: 'Pediatrics', status: 'on-duty', specialty: 'Pediatrics' },
+            { id: 4, name: 'Dr. Jeroen Eerden', department: 'Outpatient', status: 'on-duty', specialty: 'General Medicine' },
+            { id: 5, name: 'Dr. Dmitry Stolz', department: 'Emergency', status: 'on-duty', specialty: 'Emergency Medicine' },
+            { id: 6, name: 'Dr. Sarah Johnson', department: 'Orthopedics', status: 'on-duty', specialty: 'Orthopedic Surgery' },
+            { id: 7, name: 'Dr. Maria Garcia', department: 'Cardiology', status: 'on-duty', specialty: 'Cardiology' },
+            { id: 8, name: 'Dr. James Wilson', department: 'Pediatrics', status: 'on-duty', specialty: 'Pediatrics' },
+            { id: 9, name: 'Dr. Robert Chen', department: 'Outpatient', status: 'on-duty', specialty: 'Family Medicine' },
+            { id: 10, name: 'Dr. Lisa Patel', department: 'Orthopedics', status: 'on-duty', specialty: 'Sports Medicine' }
         ];
         
         let currentUser = null;
         let tokenCounter = tokens.length > 0 ? Math.max(...tokens.map(t => t.id)) + 1 : 1000;
-        
-        // Department counters
         let departmentCounters = {
             'Emergency': 1,
             'Outpatient': 1,
@@ -566,76 +476,89 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadDashboard();
-            updateChart();
             checkLoginStatus();
-            loadDoctors();
             
-            // Setup form listeners
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const username = document.getElementById('username').value.trim();
-                    const password = document.getElementById('password').value;
-                    
-                    let user = null;
-                    if (username === 'admin' && password === 'admin123') {
-                        user = { name: 'Admin User', role: 'Administrator' };
-                    } else if (username === 'staff' && password === 'staff123') {
-                        user = { name: 'Staff Member', role: 'Staff' };
-                    }
-                    
-                    if (user) {
-                        currentUser = user;
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        checkLoginStatus();
-                        closeModal('loginModal');
-                        document.getElementById('loginForm').reset();
-                        showNotification('✓ Login successful as ' + user.role + '!', 'success');
-                        loadDashboard();
-                    } else {
-                        showNotification('✗ Invalid credentials! Check demo credentials below.', 'error');
-                    }
-                });
-            }
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('registrationForm').addEventListener('submit', registerPatient);
             
-            const registrationForm = document.getElementById('registrationForm');
-            if (registrationForm) {
-                registrationForm.addEventListener('submit', registerPatient);
-            }
+            document.getElementById('phone').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+            });
+            
+            document.getElementById('firstName').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+            });
+            
+            document.getElementById('lastName').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+            });
+            
+            document.getElementById('department').addEventListener('change', function() {
+                loadDoctorsByDepartment(this.value);
+            });
         });
         
-        // Notification System
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} mr-2"></i>${message}`;
             notification.className = `notification ${type} show`;
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+            setTimeout(() => notification.classList.remove('show'), 3000);
         }
         
-        // Modal Functions
-        function showLoginModal() {
-            document.getElementById('loginModal').classList.add('active');
+        function showLoginModal() { 
+            document.getElementById('loginModal').classList.add('active'); 
         }
         
         function showRegisterModal() {
+            if (!currentUser) {
+                showNotification('Please login as staff to register patients', 'error');
+                showLoginModal();
+                return;
+            }
+            // Load doctors for the selected department
+            const department = document.getElementById('department').value;
+            if (department) {
+                loadDoctorsByDepartment(department);
+            }
             document.getElementById('registerModal').classList.add('active');
         }
         
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        function closeModal(modalId) { 
+            document.getElementById(modalId).classList.remove('active'); 
         }
         
-        // Login System - Removed duplicate, handled in DOMContentLoaded
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            let user = null;
+            if (username === 'admin' && password === 'admin123') {
+                user = { name: 'Admin User', role: 'Administrator' };
+            } else if (username === 'staff' && password === 'staff123') {
+                user = { name: 'Staff Member', role: 'Staff' };
+            }
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                checkLoginStatus();
+                closeModal('loginModal');
+                document.getElementById('loginForm').reset();
+                showNotification('Login successful! Welcome ' + user.name, 'success');
+                loadDashboard();
+            } else {
+                showNotification('Invalid credentials!', 'error');
+            }
+        }
         
         function logout() {
             currentUser = null;
             localStorage.removeItem('currentUser');
             checkLoginStatus();
             showNotification('Logged out successfully', 'info');
+            loadDashboard();
         }
         
         function checkLoginStatus() {
@@ -646,42 +569,119 @@
                 document.getElementById('userRole').textContent = currentUser.role;
                 document.getElementById('loginBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
-                document.querySelector('.w-8.h-8.bg-gray-400').classList.remove('bg-gray-400');
-                document.querySelector('.w-8.h-8.bg-gray-400').classList.add('bg-blue-500');
+                document.getElementById('registerBtnContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('userName').textContent = 'Not Logged In';
+                document.getElementById('userRole').textContent = 'Guest';
+                document.getElementById('loginBtn').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
+                document.getElementById('registerBtnContainer').classList.add('hidden');
             }
         }
         
-        // Patient Registration
+        function loadDoctorsByDepartment(department) {
+            const doctorSelect = document.getElementById('doctor');
+            if (!doctorSelect) return;
+            
+            const availableDoctors = staff.filter(s => s.department === department && s.status === 'on-duty');
+            
+            doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+            if (availableDoctors.length === 0) {
+                doctorSelect.innerHTML = '<option value="">No doctors available in this department</option>';
+            } else {
+                availableDoctors.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.name;
+                    option.textContent = `${doc.name} - ${doc.specialty}`;
+                    doctorSelect.appendChild(option);
+                });
+            }
+        }
+        
         function registerPatient(e) {
             e.preventDefault();
             
+            if (!currentUser) {
+                showNotification('Please login as staff to register patients', 'error');
+                closeModal('registerModal');
+                showLoginModal();
+                return;
+            }
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const dob = document.getElementById('dob').value;
+            const phone = document.getElementById('phone').value.trim();
+            const department = document.getElementById('department').value;
+            const doctorName = document.getElementById('doctor').value;
+            
+            // Validation
+            if (!firstName || firstName.length < 2) {
+                showNotification('Please enter a valid first name (minimum 2 characters)', 'error');
+                return;
+            }
+            if (!lastName || lastName.length < 2) {
+                showNotification('Please enter a valid last name (minimum 2 characters)', 'error');
+                return;
+            }
+            if (!dob) {
+                showNotification('Please select date of birth', 'error');
+                return;
+            }
+            if (!phone || phone.length !== 10) {
+                showNotification('Please enter a valid 10-digit phone number', 'error');
+                return;
+            }
+            if (!department) {
+                showNotification('Please select a department', 'error');
+                return;
+            }
+            if (!doctorName) {
+                showNotification('Please assign a doctor', 'error');
+                return;
+            }
+            
+            // Calculate age
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 0 || age > 120) {
+                showNotification('Please enter a valid date of birth', 'error');
+                return;
+            }
+            
+            const countryCode = document.getElementById('countryCode').value;
+            const fullPhone = countryCode + phone;
+            
             const patient = {
-                id: generatePatientId(),
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                dob: document.getElementById('dob').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                department: document.getElementById('department').value,
-                notes: document.getElementById('notes').value,
+                id: 'P' + Date.now(),
+                firstName,
+                lastName,
+                dob,
+                phone: fullPhone,
+                email: document.getElementById('email').value.trim(),
+                department,
+                doctorName,
+                notes: document.getElementById('notes').value.trim(),
                 registrationDate: new Date().toISOString(),
+                age: age,
+                registeredBy: currentUser.name,
                 status: 'registered'
             };
             
             patients.push(patient);
             localStorage.setItem('patients', JSON.stringify(patients));
-            
-            // Generate token
             generateToken(patient);
             
             document.getElementById('registrationForm').reset();
             closeModal('registerModal');
-            showNotification('Patient registered successfully! Token generated.', 'success');
+            showNotification(`✓ Patient ${firstName} ${lastName} registered successfully! Assigned to Dr. ${doctorName}`, 'success');
             loadDashboard();
-        }
-        
-        function generatePatientId() {
-            return 'P' + Date.now().toString().slice(-8);
         }
         
         function generateToken(patient) {
@@ -691,263 +691,89 @@
             
             const token = {
                 id: tokenCounter++,
-                tokenNumber: `${department.substring(0,1)}-${String(counter).padStart(4,'0')}`,
+                tokenNumber: `${department.substring(0, 1)}-${String(counter).padStart(4, '0')}`,
                 patientId: patient.id,
                 patientName: `${patient.firstName} ${patient.lastName}`,
                 department: department,
+                doctorName: patient.doctorName,
                 status: 'waiting',
                 counter: Math.floor(Math.random() * 5) + 1,
-                estimatedWaitTime: generateWaitTime(department),
+                estimatedWaitTime: getWaitTime(department),
                 createdAt: new Date().toISOString()
             };
             
             tokens.push(token);
             localStorage.setItem('tokens', JSON.stringify(tokens));
             localStorage.setItem('departmentCounters', JSON.stringify(departmentCounters));
-            
-            return token;
         }
         
-        function generateWaitTime(department) {
-            const waitTimes = {
-                'Emergency': 15,
-                'Outpatient': 30,
-                'Cardiology': 45,
-                'Pediatrics': 25,
-                'Orthopedics': 35
-            };
+        function getWaitTime(department) {
+            const waitTimes = { 'Emergency': 15, 'Outpatient': 30, 'Cardiology': 45, 'Pediatrics': 25, 'Orthopedics': 35 };
             return waitTimes[department] || 20;
         }
         
-        // Dashboard Loading
-        function loadDashboard() {
-            document.getElementById('dashboardTitle').textContent = 'Queue Management Dashboard';
-            const content = `
-                <!-- Page Title with Filter -->
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800">Current Queue Overview</h3>
-                    <button onclick="filterQueue()" class="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900">
-                        <span>Filter by ▼</span>
-                    </button>
-                </div>
-                
-                <!-- Tabs -->
-                <div class="flex space-x-6 border-b border-gray-200 mb-6">
-                    <button onclick="showRegistrationView()" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700">Patient Registration</button>
-                    <button onclick="showTokenDisplay()" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700">Token Display</button>
-                    <button onclick="showQueueDisplay()" class="px-1 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600">Queue Display</button>
-                    <button onclick="showAdminDashboard()" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700">Admin Dashboard</button>
-                </div>
-                
-                <!-- Queue Display Dashboard (Default View) -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Current Token Display -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Current Token</h4>
-                        ${getCurrentTokenHTML()}
-                    </div>
-                    
-                    <!-- Department Queues -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Department Queues</h4>
-                        ${getDepartmentQueuesHTML()}
-                    </div>
-                    
-                    <!-- Token List -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Active Tokens</h4>
-                        ${getTokenListHTML()}
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('mainContent').innerHTML = content;
-            updateChart();
-        }
-        
-        // View Functions
-        function showRegistrationView() {
-            document.getElementById('dashboardTitle').textContent = 'Patient Registration';
-            const content = `
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Registration Form -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">New Registration</h4>
-                        <button onclick="showRegisterModal()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 mb-4">
-                            + Register New Patient
-                        </button>
-                        
-                        <div class="mt-6">
-                            <h5 class="font-medium text-gray-700 mb-3">Today's Registrations</h5>
-                            <div class="space-y-3 max-h-96 overflow-y-auto">
-                                ${getTodayRegistrationsHTML()}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Appointment Verification -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Appointment Verification</h4>
-                        <div class="space-y-3">
-                            ${getPendingVerificationsHTML()}
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('mainContent').innerHTML = content;
+        function loadDashboard() { 
+            showTokenDisplay(); 
         }
         
         function showTokenDisplay() {
             document.getElementById('dashboardTitle').textContent = 'Token Display';
-            const waitingTokens = tokens.filter(t => t.status === 'waiting');
-            const content = `
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    ${waitingTokens.slice(0, 3).map(token => `
-                        <div class="token-card rounded-xl p-6 text-white">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <p class="text-sm opacity-90">Token Number</p>
-                                    <p class="text-4xl font-bold">${token.tokenNumber}</p>
-                                </div>
-                                <div class="bg-white p-2 rounded-lg cursor-pointer" onclick="showTokenQR('${token.tokenNumber}')">
-                                    <i class="fas fa-qrcode text-4xl text-purple-600"></i>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <p class="text-xs opacity-75">Patient</p>
-                                    <p class="font-medium">${token.patientName}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs opacity-75">Department</p>
-                                    <p class="font-medium">${token.department}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs opacity-75">Est. Wait</p>
-                                    <p class="font-medium">${token.estimatedWaitTime} mins</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs opacity-75">Counter</p>
-                                    <p class="font-medium">#${token.counter}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-white/20 rounded-lg p-3">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-sm">Status</span>
-                                    <span class="text-sm font-semibold flex items-center">
-                                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                                        ${token.status}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <!-- Token Status List -->
-                <div class="mt-6 bg-white rounded-xl shadow-sm p-6">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-4">All Tokens Status</h4>
-                    <div class="space-y-2">
-                        ${tokens.slice().reverse().map(token => `
-                            <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer" onclick="viewTokenDetails('${token.tokenNumber}')">
-                                <div>
-                                    <span class="font-medium">${token.tokenNumber}</span>
-                                    <span class="text-sm text-gray-500 ml-2">${token.patientName}</span>
-                                </div>
-                                <span class="status-badge status-${token.status}">${token.status}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            document.getElementById('mainContent').innerHTML = content;
-        }
-        
-        function showQueueDisplay() {
-            loadDashboard(); // Queue display is the default dashboard
-        }
-        
-        function showAdminDashboard() {
-            if (!currentUser) {
-                showNotification('Please login to access admin dashboard', 'error');
-                showLoginModal();
-                return;
-            }
+            updateActiveSidebar('Token Display');
             
-            document.getElementById('dashboardTitle').textContent = 'Admin Dashboard';
+            const waitingTokens = tokens.filter(t => t.status === 'waiting').slice(0, 6);
+            const recentTokens = tokens.slice().reverse().slice(0, 10);
+            
             const content = `
-                <!-- Stats Overview -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p class="text-sm text-blue-600 mb-1">Total Patients Today</p>
-                        <p class="text-2xl font-bold text-blue-700">${getTodayPatientCount()}</p>
-                        <p class="text-xs text-blue-500 mt-1">▲ +${getPatientIncrease()}% from yesterday</p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <p class="text-sm text-green-600 mb-1">Avg. Wait Time</p>
-                        <p class="text-2xl font-bold text-green-700">${getAverageWaitTime()} min</p>
-                        <p class="text-xs text-green-500 mt-1">▼ -3 min from average</p>
-                    </div>
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <p class="text-sm text-yellow-600 mb-1">Active Tokens</p>
-                        <p class="text-2xl font-bold text-yellow-700">${tokens.filter(t => t.status === 'waiting' || t.status === 'in-progress').length}</p>
-                        <p class="text-xs text-yellow-500 mt-1">In queue now</p>
-                    </div>
-                    <div class="bg-purple-50 p-4 rounded-lg">
-                        <p class="text-sm text-purple-600 mb-1">Staff On Duty</p>
-                        <p class="text-2xl font-bold text-purple-700">${staff.filter(s => s.status === 'on-duty').length}</p>
-                        <p class="text-xs text-purple-500 mt-1">Across ${getDepartmentCount()} departments</p>
-                    </div>
-                </div>
-                
-                <!-- Charts and Staff Overview -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Chart -->
-                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
-                        <p class="text-sm font-medium text-gray-700 mb-3">Patient Flow Analytics</p>
-                        <div class="h-64">
-                            <canvas id="queueChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <!-- Staff Overview -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <p class="text-sm font-medium text-gray-700 mb-3">Department Staff</p>
-                        <div class="space-y-3">
-                            ${staff.map(s => `
-                                <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg">
-                                    <div>
-                                        <p class="font-medium text-sm">${s.name}</p>
-                                        <p class="text-xs text-gray-500">${s.department}</p>
+                <div class="animate-fade-up">
+                    ${waitingTokens.length > 0 ? `
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">🎫 Current Waiting Tokens</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                            ${waitingTokens.map(token => `
+                                <div class="token-card rounded-xl p-5 text-white cursor-pointer hover:scale-105 transition-all" onclick="viewTokenDetails('${token.tokenNumber}')">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <p class="text-xs opacity-80">Token Number</p>
+                                            <p class="text-3xl font-bold">${token.tokenNumber}</p>
+                                        </div>
+                                        <i class="fas fa-qrcode text-3xl opacity-60"></i>
                                     </div>
-                                    <span class="text-xs px-2 py-1 rounded-full ${s.status === 'on-duty' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-                                        ${s.status}
-                                    </span>
+                                    <p class="font-semibold text-lg">${token.patientName}</p>
+                                    <p class="text-sm opacity-80 mt-1">${token.department}</p>
+                                    <p class="text-xs opacity-90 mt-1">👨‍⚕️ Dr. ${token.doctorName || 'Not Assigned'}</p>
+                                    <p class="text-xs opacity-70 mt-2">Counter #${token.counter} • Est. ${token.estimatedWaitTime} mins</p>
                                 </div>
                             `).join('')}
                         </div>
-                        <p class="text-xs text-gray-400 text-center mt-4">All the medical help you need.</p>
-                    </div>
+                    ` : '<div class="bg-white rounded-xl p-8 text-center mb-8"><i class="fas fa-inbox text-gray-300 text-5xl mb-3"></i><p class="text-gray-500">No waiting tokens at the moment</p></div>'}
                     
-                    <!-- Department Performance -->
-                    <div class="lg:col-span-3 bg-white rounded-xl shadow-sm p-6">
-                        <p class="text-sm font-medium text-gray-700 mb-3">Department Performance</p>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📋 All Tokens</h3>
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full">
-                                <thead>
-                                    <tr class="text-left text-xs text-gray-500 border-b">
-                                        <th class="pb-2">Department</th>
-                                        <th class="pb-2">Total Patients</th>
-                                        <th class="pb-2">Waiting</th>
-                                        <th class="pb-2">In Progress</th>
-                                        <th class="pb-2">Completed</th>
-                                        <th class="pb-2">Avg Wait Time</th>
+                                <thead class="bg-gray-50 border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Token</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Patient Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Department</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Doctor</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Counter</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${getDepartmentPerformanceHTML()}
+                                    ${recentTokens.map(token => `
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onclick="viewTokenDetails('${token.tokenNumber}')">
+                                            <td class="px-6 py-3 font-bold text-gray-800">${token.tokenNumber}</td>
+                                            <td class="px-6 py-3 text-gray-700">${token.patientName}</td>
+                                            <td class="px-6 py-3 text-gray-600">${token.department}</td>
+                                            <td class="px-6 py-3 text-gray-600">${token.doctorName ? 'Dr. ' + token.doctorName : 'Not Assigned'}</td>
+                                            <td class="px-6 py-3 text-gray-600">#${token.counter}</td>
+                                            <td class="px-6 py-3"><span class="status-badge status-${token.status}">${token.status}</span></td>
+                                            <td class="px-6 py-3"><button class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">View →</button></td>
+                                        </tr>
+                                    `).join('')}
+                                    ${recentTokens.length === 0 ? '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-500">No tokens found</td></tr>' : ''}
                                 </tbody>
                             </table>
                         </div>
@@ -956,133 +782,336 @@
             `;
             
             document.getElementById('mainContent').innerHTML = content;
-            setTimeout(updateChart, 100);
         }
         
-        // Helper Functions
-        function getCurrentTokenHTML() {
-            const currentToken = tokens.find(t => t.status === 'in-progress') || tokens.find(t => t.status === 'waiting');
+        function showDepartmentQueues() {
+            document.getElementById('dashboardTitle').textContent = 'Department Queues';
+            updateActiveSidebar('Department Queues');
             
-            if (!currentToken) {
-                return '<p class="text-gray-500">No active tokens</p>';
+            const departments = ['Emergency', 'Outpatient', 'Cardiology', 'Pediatrics', 'Orthopedics'];
+            
+            const content = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-up">
+                    ${departments.map(dept => {
+                        const deptTokens = tokens.filter(t => t.department === dept);
+                        const waiting = deptTokens.filter(t => t.status === 'waiting').length;
+                        const inProgress = deptTokens.filter(t => t.status === 'in-progress').length;
+                        const completed = deptTokens.filter(t => t.status === 'completed').length;
+                        const cancelled = deptTokens.filter(t => t.status === 'cancelled').length;
+                        
+                        return `
+                            <div class="bg-white rounded-xl shadow-lg p-6 department-stat-card">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-xl font-bold text-gray-800">${dept}</h3>
+                                    <span class="text-2xl">${dept === 'Emergency' ? '🚨' : dept === 'Outpatient' ? '🏥' : dept === 'Cardiology' ? '❤️' : dept === 'Pediatrics' ? '👶' : '🦴'}</span>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-3 mb-4">
+                                    <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                                        <p class="text-xs text-gray-600">Waiting</p>
+                                        <p class="text-2xl font-bold text-yellow-600">${waiting}</p>
+                                    </div>
+                                    <div class="bg-blue-50 rounded-lg p-3 text-center">
+                                        <p class="text-xs text-gray-600">In Progress</p>
+                                        <p class="text-2xl font-bold text-blue-600">${inProgress}</p>
+                                    </div>
+                                    <div class="bg-green-50 rounded-lg p-3 text-center">
+                                        <p class="text-xs text-gray-600">Completed</p>
+                                        <p class="text-2xl font-bold text-green-600">${completed}</p>
+                                    </div>
+                                    <div class="bg-red-50 rounded-lg p-3 text-center">
+                                        <p class="text-xs text-gray-600">Cancelled</p>
+                                        <p class="text-2xl font-bold text-red-600">${cancelled}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t pt-3 mt-2">
+                                    <p class="text-sm font-semibold text-gray-700 mb-2">👨‍⚕️ Doctors on Duty:</p>
+                                    ${staff.filter(s => s.department === dept && s.status === 'on-duty').map(doc => `
+                                        <div class="flex justify-between items-center text-sm mb-1">
+                                            <span>${doc.name}</span>
+                                            <span class="text-xs text-green-600">● ${doc.specialty}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                
+                                <button onclick="filterByDepartment('${dept}')" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-all">
+                                    View Queue Details →
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = content;
+        }
+        
+        function showAnalytics() {
+            if (!currentUser) {
+                showNotification('Please login to access analytics dashboard', 'error');
+                showLoginModal();
+                return;
             }
             
-            return `
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p class="text-sm text-blue-600 mb-1">CURRENT TOKEN</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-3xl font-bold text-blue-700">${currentToken.tokenNumber}</span>
-                        <span class="px-3 py-1 bg-blue-600 text-white text-sm rounded-full">Counter #${currentToken.counter}</span>
+            document.getElementById('dashboardTitle').textContent = 'Analytics Dashboard';
+            updateActiveSidebar('Analytics');
+            
+            const today = new Date().toDateString();
+            const todayPatients = patients.filter(p => new Date(p.registrationDate).toDateString() === today).length;
+            const activeTokens = tokens.filter(t => t.status === 'waiting' || t.status === 'in-progress').length;
+            const completedToday = tokens.filter(t => t.status === 'completed' && new Date(t.createdAt).toDateString() === today).length;
+            const avgWaitTime = tokens.filter(t => t.status === 'waiting').length > 0 
+                ? Math.round(tokens.filter(t => t.status === 'waiting').reduce((sum, t) => sum + t.estimatedWaitTime, 0) / tokens.filter(t => t.status === 'waiting').length)
+                : 0;
+            
+            const content = `
+                <div class="animate-fade-up">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-5 text-white">
+                            <p class="text-sm opacity-90">Patients Today</p>
+                            <p class="text-3xl font-bold mt-2">${todayPatients}</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-5 text-white">
+                            <p class="text-sm opacity-90">Active Tokens</p>
+                            <p class="text-3xl font-bold mt-2">${activeTokens}</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-5 text-white">
+                            <p class="text-sm opacity-90">Avg. Wait Time</p>
+                            <p class="text-3xl font-bold mt-2">${avgWaitTime} min</p>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-5 text-white">
+                            <p class="text-sm opacity-90">Completed Today</p>
+                            <p class="text-3xl font-bold mt-2">${completedToday}</p>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-1">${currentToken.department} - ${currentToken.patientName}</p>
-                    <div class="mt-3 flex space-x-2">
-                        <button onclick="updateTokenStatus('${currentToken.tokenNumber}', 'in-progress')" class="flex-1 bg-green-600 text-white text-sm py-1 rounded hover:bg-green-700">Start</button>
-                        <button onclick="updateTokenStatus('${currentToken.tokenNumber}', 'completed')" class="flex-1 bg-blue-600 text-white text-sm py-1 rounded hover:bg-blue-700">Complete</button>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Patient Flow (Hourly)</h3>
+                            <div class="h-64">
+                                <canvas id="patientFlowChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Department Distribution</h3>
+                            <div class="h-64">
+                                <canvas id="departmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Department Performance</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Department</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Total</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Waiting</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">In Progress</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Completed</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Cancelled</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Efficiency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${['Emergency', 'Outpatient', 'Cardiology', 'Pediatrics', 'Orthopedics'].map(dept => {
+                                        const deptTokens = tokens.filter(t => t.department === dept);
+                                        const waiting = deptTokens.filter(t => t.status === 'waiting').length;
+                                        const inProgress = deptTokens.filter(t => t.status === 'in-progress').length;
+                                        const completed = deptTokens.filter(t => t.status === 'completed').length;
+                                        const cancelled = deptTokens.filter(t => t.status === 'cancelled').length;
+                                        const total = deptTokens.length;
+                                        const efficiency = total > 0 ? Math.round((completed / total) * 100) : 0;
+                                        
+                                        return `
+                                            <tr class="border-b border-gray-100">
+                                                <td class="px-4 py-3 font-medium text-gray-800">${dept}</td>
+                                                <td class="px-4 py-3 text-gray-700">${total}</td>
+                                                <td class="px-4 py-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">${waiting}</span></td>
+                                                <td class="px-4 py-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${inProgress}</span></td>
+                                                <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">${completed}</span></td>
+                                                <td class="px-4 py-3"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">${cancelled}</span></td>
+                                                <td class="px-4 py-3">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                            <div class="bg-indigo-600 h-2 rounded-full" style="width: ${efficiency}%"></div>
+                                                        </div>
+                                                        <span class="ml-2 text-sm text-gray-600">${efficiency}%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             `;
+            
+            document.getElementById('mainContent').innerHTML = content;
+            setTimeout(() => createAnalyticsCharts(), 100);
         }
         
-        function getDepartmentQueuesHTML() {
-            const departments = ['Emergency', 'Outpatient', 'Cardiology', 'Pediatrics', 'Orthopedics'];
+        function filterByDepartment(department) {
+            document.getElementById('dashboardTitle').textContent = `${department} Department Queue`;
             
-            return departments.map(dept => {
-                const deptTokens = tokens.filter(t => t.department === dept && t.status !== 'completed');
-                const waiting = deptTokens.filter(t => t.status === 'waiting').length;
-                const inProgress = deptTokens.filter(t => t.status === 'in-progress').length;
-                
-                return `
-                    <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg">
-                        <span class="text-sm">${dept}</span>
-                        <div class="flex items-center space-x-4">
-                            <span class="text-sm font-medium">${waiting} waiting</span>
-                            ${inProgress > 0 ? `<span class="text-xs text-blue-600">${inProgress} in progress</span>` : ''}
+            const deptTokens = tokens.filter(t => t.department === department);
+            
+            const content = `
+                <div class="animate-fade-up">
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white mb-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold">${department}</h3>
+                                <p class="text-sm opacity-90 mt-1">Total tokens: ${deptTokens.length}</p>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p class="text-xs opacity-75">Waiting</p>
+                                    <p class="text-xl font-bold">${deptTokens.filter(t => t.status === 'waiting').length}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs opacity-75">In Progress</p>
+                                    <p class="text-xl font-bold">${deptTokens.filter(t => t.status === 'in-progress').length}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs opacity-75">Completed</p>
+                                    <p class="text-xl font-bold">${deptTokens.filter(t => t.status === 'completed').length}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                `;
-            }).join('');
-        }
-        
-        function getTokenListHTML() {
-            const activeTokens = tokens.filter(t => t.status !== 'completed').slice(0, 5);
-            
-            return activeTokens.map(token => `
-                <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer" onclick="viewTokenDetails('${token.tokenNumber}')">
-                    <div class="flex items-center space-x-3">
-                        <span class="font-medium text-gray-800">${token.tokenNumber}</span>
-                        <span class="text-sm text-gray-600">${token.patientName}</span>
-                        <span class="text-xs text-gray-500">${token.department}</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-xs text-gray-500">Counter #${token.counter}</span>
-                        <span class="status-badge status-${token.status}">${token.status}</span>
+                    
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Token</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Patient Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Doctor</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Counter</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Est. Wait</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${deptTokens.length > 0 ? deptTokens.map(token => `
+                                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                            <td class="px-6 py-3 font-bold text-gray-800">${token.tokenNumber}</td>
+                                            <td class="px-6 py-3 text-gray-700">${token.patientName}</td>
+                                            <td class="px-6 py-3 text-gray-600">${token.doctorName ? 'Dr. ' + token.doctorName : 'Not Assigned'}</td>
+                                            <td class="px-6 py-3 text-gray-600">#${token.counter}</td>
+                                            <td class="px-6 py-3"><span class="status-badge status-${token.status}">${token.status}</span></td>
+                                            <td class="px-6 py-3 text-gray-600">${token.estimatedWaitTime} min</td>
+                                            <td class="px-6 py-3">
+                                                <button onclick="viewTokenDetails('${token.tokenNumber}')" class="text-indigo-600 hover:text-indigo-800 font-medium">View →</button>
+                                            </td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-500">No tokens in this department</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+            
+            document.getElementById('mainContent').innerHTML = content;
         }
         
-        function getTodayRegistrationsHTML() {
-            const today = new Date().toDateString();
-            const todayPatients = patients.filter(p => new Date(p.registrationDate).toDateString() === today);
+        function viewTokenDetails(tokenNumber) {
+            const token = tokens.find(t => t.tokenNumber === tokenNumber);
+            if (!token) return;
             
-            if (todayPatients.length === 0) {
-                return '<p class="text-gray-500 text-center py-4">No registrations today</p>';
-            }
+            const patient = patients.find(p => p.id === token.patientId);
             
-            return todayPatients.map(patient => `
-                <div class="p-3 bg-gray-50 rounded-lg">
-                    <p class="font-medium text-gray-800">${patient.firstName} ${patient.lastName}</p>
-                    <p class="text-sm text-gray-500">${patient.department} • ${new Date(patient.registrationDate).toLocaleTimeString()}</p>
-                </div>
-            `).join('');
-        }
-        
-        function getPendingVerificationsHTML() {
-            const pendingTokens = tokens.filter(t => t.status === 'waiting').slice(0, 5);
-            
-            if (pendingTokens.length === 0) {
-                return '<p class="text-gray-500 text-center py-4">No pending verifications</p>';
-            }
-            
-            return pendingTokens.map(token => `
-                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                        <p class="font-medium text-gray-800">${token.patientName}</p>
-                        <p class="text-sm text-gray-500">Token: ${token.tokenNumber} • ${token.department}</p>
+            const content = `
+                <div class="space-y-4">
+                    <div class="token-card rounded-xl p-6 text-white text-center">
+                        <p class="text-sm opacity-90 mb-2">${token.department}</p>
+                        <p class="text-4xl font-bold">${token.tokenNumber}</p>
+                        <p class="text-lg mt-2">${token.patientName}</p>
+                        <p class="text-sm mt-1">👨‍⚕️ Dr. ${token.doctorName || 'Not Assigned'}</p>
                     </div>
-                    <button onclick="verifyToken('${token.tokenNumber}')" class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700">
-                        Verify
-                    </button>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-3 bg-gray-50 rounded-lg text-center">
+                            <p class="text-xs text-gray-500">Counter</p>
+                            <p class="text-xl font-bold text-gray-800">#${token.counter}</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg text-center">
+                            <p class="text-xs text-gray-500">Status</p>
+                            <p class="text-xl font-bold capitalize ${token.status === 'completed' ? 'text-green-600' : token.status === 'in-progress' ? 'text-blue-600' : 'text-yellow-600'}">${token.status}</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg text-center">
+                            <p class="text-xs text-gray-500">Est. Wait</p>
+                            <p class="text-xl font-bold text-gray-800">${token.estimatedWaitTime} min</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg text-center">
+                            <p class="text-xs text-gray-500">Time</p>
+                            <p class="text-sm font-bold text-gray-800">${new Date(token.createdAt).toLocaleTimeString()}</p>
+                        </div>
+                    </div>
+                    
+                    ${patient ? `
+                        <div class="border-t pt-4">
+                            <p class="font-semibold text-gray-800 mb-2">Patient Information</p>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Name:</span>
+                                    <span class="font-medium">${patient.firstName} ${patient.lastName}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Phone:</span>
+                                    <span class="font-medium">${patient.phone}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Age:</span>
+                                    <span class="font-medium">${patient.age} years</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Doctor:</span>
+                                    <span class="font-medium">Dr. ${patient.doctorName}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Registered By:</span>
+                                    <span class="font-medium">${patient.registeredBy || 'Staff'}</span>
+                                </div>
+                                ${patient.email ? `<div class="flex justify-between"><span class="text-gray-600">Email:</span><span class="font-medium">${patient.email}</span></div>` : ''}
+                                ${patient.notes ? `<div class="mt-2 pt-2 border-t"><p class="text-gray-600 mb-1">Notes:</p><p class="text-gray-700 bg-gray-50 p-2 rounded">${patient.notes}</p></div>` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="space-y-2 pt-4">
+                        ${token.status === 'waiting' ? `
+                            <button onclick="updateTokenStatus('${token.tokenNumber}', 'in-progress'); closeModal('tokenModal')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 font-medium">
+                                <i class="fas fa-play mr-2"></i>Start Service
+                            </button>
+                            <button onclick="updateTokenStatus('${token.tokenNumber}', 'cancelled'); closeModal('tokenModal')" class="w-full bg-red-500 text-white py-2.5 rounded-lg hover:bg-red-600 font-medium">
+                                <i class="fas fa-times mr-2"></i>Cancel Token
+                            </button>
+                        ` : token.status === 'in-progress' ? `
+                            <button onclick="updateTokenStatus('${token.tokenNumber}', 'completed'); closeModal('tokenModal')" class="w-full bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 font-medium">
+                                <i class="fas fa-check mr-2"></i>Complete Service
+                            </button>
+                        ` : ''}
+                        <button onclick="callToken('${token.tokenNumber}')" class="w-full bg-purple-600 text-white py-2.5 rounded-lg hover:bg-purple-700 font-medium">
+                            <i class="fas fa-volume-up mr-2"></i>Call Patient
+                        </button>
+                    </div>
                 </div>
-            `).join('');
-        }
-        
-        function getDepartmentPerformanceHTML() {
-            const departments = ['Emergency', 'Outpatient', 'Cardiology', 'Pediatrics', 'Orthopedics'];
+            `;
             
-            return departments.map(dept => {
-                const deptTokens = tokens.filter(t => t.department === dept);
-                const waiting = deptTokens.filter(t => t.status === 'waiting').length;
-                const inProgress = deptTokens.filter(t => t.status === 'in-progress').length;
-                const completed = deptTokens.filter(t => t.status === 'completed').length;
-                const avgWait = deptTokens.length > 0 
-                    ? Math.round(deptTokens.reduce((sum, t) => sum + (t.estimatedWaitTime || 20), 0) / deptTokens.length)
-                    : 0;
-                
-                return `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="py-2">${dept}</td>
-                        <td class="py-2">${deptTokens.length}</td>
-                        <td class="py-2">${waiting}</td>
-                        <td class="py-2">${inProgress}</td>
-                        <td class="py-2">${completed}</td>
-                        <td class="py-2">${avgWait} min</td>
-                    </tr>
-                `;
-            }).join('');
+            document.getElementById('tokenDetailsContainer').innerHTML = content;
+            document.getElementById('tokenModal').classList.add('active');
         }
         
-        // Action Functions
         function updateTokenStatus(tokenNumber, status) {
             const token = tokens.find(t => t.tokenNumber === tokenNumber);
             if (token) {
@@ -1090,182 +1119,102 @@
                 localStorage.setItem('tokens', JSON.stringify(tokens));
                 showNotification(`Token ${tokenNumber} marked as ${status}`, 'success');
                 loadDashboard();
+                closeModal('tokenModal');
             }
         }
         
-        function verifyToken(tokenNumber) {
-            updateTokenStatus(tokenNumber, 'in-progress');
-        }
-        
-        function viewTokenDetails(tokenNumber) {
+        function callToken(tokenNumber) {
             const token = tokens.find(t => t.tokenNumber === tokenNumber);
             if (token) {
-                const patient = patients.find(p => p.id === token.patientId);
-                const details = `
-                    <div class="token-card rounded-xl p-6 text-white">
-                        <p class="text-3xl font-bold text-center">${token.tokenNumber}</p>
-                        <p class="text-center mt-2">${token.patientName}</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="text-xs text-gray-500">Department</p>
-                            <p class="font-medium">${token.department}</p>
+                const content = `
+                    <div class="relative">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">Calling Patient</h2>
+                            <button onclick="closeModal('tokenModal')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="text-xs text-gray-500">Counter</p>
-                            <p class="font-medium">#${token.counter}</p>
+                        <div class="text-center">
+                            <i class="fas fa-volume-up text-6xl text-purple-500 mb-4"></i>
+                            <div class="bg-purple-50 p-4 rounded-lg border-2 border-purple-200 mb-4">
+                                <p class="text-lg font-semibold text-purple-800">Token: ${token.tokenNumber}</p>
+                                <p class="text-md text-purple-700">Counter: #${token.counter}</p>
+                                <p class="text-md text-purple-700">Department: ${token.department}</p>
+                            </div>
+                            <p class="text-gray-600">Please proceed to the designated counter</p>
                         </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="text-xs text-gray-500">Status</p>
-                            <p class="font-medium capitalize">${token.status}</p>
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <p class="text-xs text-gray-500">Est. Wait</p>
-                            <p class="font-medium">${token.estimatedWaitTime} mins</p>
-                        </div>
-                    </div>
-                    ${patient ? `
-                        <div class="border-t pt-4">
-                            <p class="font-medium mb-2">Patient Details</p>
-                            <p class="text-sm">Phone: ${patient.phone}</p>
-                            <p class="text-sm">DOB: ${new Date(patient.dob).toLocaleDateString()}</p>
-                            ${patient.notes ? `<p class="text-sm mt-2">Notes: ${patient.notes}</p>` : ''}
-                        </div>
-                    ` : ''}
-                    <div class="flex space-x-2 pt-4">
-                        <button onclick="updateTokenStatus('${token.tokenNumber}', 'in-progress')" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Start</button>
-                        <button onclick="updateTokenStatus('${token.tokenNumber}', 'completed')" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Complete</button>
                     </div>
                 `;
-                
-                document.getElementById('tokenDetails').innerHTML = details;
-                document.getElementById('tokenModal').classList.add('active');
+                document.getElementById('tokenDetailsContainer').innerHTML = content;
             }
-        }
-        
-        function showTokenQR(tokenNumber) {
-            showNotification(`QR Code for token ${tokenNumber}`, 'info');
-        }
-        
-        function filterByDepartment(department) {
-            // Update sidebar active state
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            document.getElementById('dashboardTitle').textContent = `${department} Department Queue`;
-            
-            // Filter tokens by department
-            const deptTokens = tokens.filter(t => t.department === department);
-            
-            const content = `
-                <!-- Department Header -->
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-800">${department}</h3>
-                        <p class="text-sm text-gray-500 mt-1">Total tokens: ${deptTokens.length}</p>
-                    </div>
-                    <div class="flex space-x-3">
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500">Waiting</p>
-                            <p class="text-2xl font-bold text-yellow-600">${deptTokens.filter(t => t.status === 'waiting').length}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500">In Progress</p>
-                            <p class="text-2xl font-bold text-blue-600">${deptTokens.filter(t => t.status === 'in-progress').length}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500">Completed</p>
-                            <p class="text-2xl font-bold text-green-600">${deptTokens.filter(t => t.status === 'completed').length}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Tokens Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    ${deptTokens.length === 0 ? 
-                        '<p class="text-center text-gray-500 py-8 col-span-3">No tokens in this department</p>' :
-                        deptTokens.map(token => `
-                            <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition cursor-pointer" onclick="viewTokenDetails('${token.tokenNumber}')">
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="text-3xl font-bold text-blue-600">${token.tokenNumber}</span>
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium status-badge status-${token.status}">${token.status}</span>
-                                </div>
-                                <div class="space-y-2 text-sm">
-                                    <p class="font-medium text-gray-800">${token.patientName}</p>
-                                    <div class="flex justify-between text-gray-600">
-                                        <span>Counter: #${token.counter}</span>
-                                        <span>${token.estimatedWaitTime} min wait</span>
-                                    </div>
-                                </div>
-                                <div class="flex space-x-2 mt-4">
-                                    <button onclick="event.stopPropagation(); updateTokenStatus('${token.tokenNumber}', 'in-progress')" class="flex-1 bg-blue-500 text-white text-xs py-2 rounded hover:bg-blue-600">Start</button>
-                                    <button onclick="event.stopPropagation(); updateTokenStatus('${token.tokenNumber}', 'completed')" class="flex-1 bg-green-500 text-white text-xs py-2 rounded hover:bg-green-600">Complete</button>
-                                </div>
-                            </div>
-                        `).join('')
-                    }
-                </div>
-                
-                <!-- Department Stats -->
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-4">Department Statistics</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <p class="text-sm text-gray-600 mb-1">Total</p>
-                            <p class="text-2xl font-bold text-gray-800">${deptTokens.length}</p>
-                        </div>
-                        <div class="text-center p-4 bg-yellow-50 rounded-lg">
-                            <p class="text-sm text-gray-600 mb-1">Avg Wait Time</p>
-                            <p class="text-2xl font-bold text-yellow-600">${deptTokens.length > 0 ? Math.round(deptTokens.reduce((sum, t) => sum + (t.estimatedWaitTime || 20), 0) / deptTokens.length) : 0} min</p>
-                        </div>
-                        <div class="text-center p-4 bg-blue-50 rounded-lg">
-                            <p class="text-sm text-gray-600 mb-1">Service Rate</p>
-                            <p class="text-2xl font-bold text-blue-600">${deptTokens.length > 0 ? Math.round((deptTokens.filter(t => t.status === 'completed').length / deptTokens.length) * 100) : 0}%</p>
-                        </div>
-                        <div class="text-center p-4 bg-green-50 rounded-lg">
-                            <p class="text-sm text-gray-600 mb-1">Completed</p>
-                            <p class="text-2xl font-bold text-green-600">${deptTokens.filter(t => t.status === 'completed').length}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('mainContent').innerHTML = content;
-            showNotification(`Showing ${department} department queue`, 'info');
-        }
-        
-        function showCurrentToken() {
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            showTokenDisplay();
-        }
-        
-        function showDepartmentQueues() {
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            showQueueDisplay();
-        }
-        
-        function showTokenStatus() {
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            showTokenDisplay();
-        }
-        
-        function showAnalytics() {
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            showAdminDashboard();
         }
         
         function searchPatients(query) {
-            if (query.length > 2) {
-                showNotification(`Searching for: ${query}`, 'info');
+            if (query.length < 2) {
+                loadDashboard();
+                return;
             }
+            
+            const results = patients.filter(p => 
+                p.firstName.toLowerCase().includes(query.toLowerCase()) ||
+                p.lastName.toLowerCase().includes(query.toLowerCase()) ||
+                p.phone.includes(query)
+            );
+            
+            if (results.length === 0) {
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="bg-white rounded-xl p-8 text-center">
+                        <i class="fas fa-search text-gray-300 text-5xl mb-3"></i>
+                        <p class="text-gray-500">No patients found for "<strong>${query}</strong>"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const content = `
+                <div class="animate-fade-up">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Search Results (${results.length} found)</h3>
+                    <div class="space-y-3">
+                        ${results.map(patient => {
+                            const patientTokens = tokens.filter(t => t.patientId === patient.id);
+                            return `
+                                <div class="bg-white rounded-xl shadow-sm p-5 card-hover">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <p class="font-bold text-gray-800 text-lg">${patient.firstName} ${patient.lastName}</p>
+                                            <p class="text-sm text-gray-600">${patient.phone}</p>
+                                            <p class="text-xs text-gray-500 mt-1">👨‍⚕️ Dr. ${patient.doctorName || 'Not Assigned'}</p>
+                                        </div>
+                                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">${patient.department}</span>
+                                    </div>
+                                    ${patientTokens.length > 0 ? `
+                                        <div class="space-y-2 mt-3">
+                                            <p class="text-sm font-medium text-gray-700">Tokens:</p>
+                                            ${patientTokens.map(token => `
+                                                <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                                    <span class="font-mono font-bold">${token.tokenNumber}</span>
+                                                    <span class="status-badge status-${token.status}">${token.status}</span>
+                                                    <button onclick="viewTokenDetails('${token.tokenNumber}')" class="text-indigo-600 hover:text-indigo-800 text-sm">View →</button>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    ` : '<p class="text-sm text-gray-500 mt-3">No active tokens</p>'}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('mainContent').innerHTML = content;
         }
         
-        function filterQueue() {
-            showNotification('Filter options opened', 'info');
+        function updateActiveSidebar(viewName) {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.trim() === viewName) {
+                    item.classList.add('active');
+                }
+            });
         }
         
         function toggleKioskMode() {
@@ -1276,117 +1225,62 @@
         function refreshData() {
             patients = JSON.parse(localStorage.getItem('patients')) || [];
             tokens = JSON.parse(localStorage.getItem('tokens')) || [];
-            showNotification('Data refreshed', 'success');
+            showNotification('Data refreshed successfully', 'success');
             loadDashboard();
         }
         
-        // Statistics Functions
-        function getTodayPatientCount() {
-            const today = new Date().toDateString();
-            return patients.filter(p => new Date(p.registrationDate).toDateString() === today).length;
-        }
-        
-        function getPatientIncrease() {
-            return Math.floor(Math.random() * 20) + 5;
-        }
-        
-        function getAverageWaitTime() {
-            const waitingTokens = tokens.filter(t => t.status === 'waiting');
-            if (waitingTokens.length === 0) return 0;
-            const total = waitingTokens.reduce((sum, t) => sum + (t.estimatedWaitTime || 20), 0);
-            return Math.round(total / waitingTokens.length);
-        }
-        
-        function getDepartmentCount() {
-            return new Set(staff.map(s => s.department)).size;
-        }
-        
-        function loadDoctors() {
-            const doctorSelect = document.getElementById('doctor');
-            if (doctorSelect) {
-                staff.forEach(s => {
-                    const option = document.createElement('option');
-                    option.value = s.name;
-                    option.textContent = s.name;
-                    doctorSelect.appendChild(option);
-                });
-            }
-        }
-        
-        // Chart Update
-        function updateChart() {
-            const ctx = document.getElementById('queueChart');
-            if (!ctx) return;
-            
-            // Clear existing chart
-            while (ctx.firstChild) {
-                ctx.removeChild(ctx.firstChild);
-            }
-            
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM'],
-                    datasets: [{
-                        label: 'Patients in Queue',
-                        data: getHourlyData(),
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+        function createAnalyticsCharts() {
+            const patientFlowCtx = document.getElementById('patientFlowChart');
+            if (patientFlowCtx) {
+                new Chart(patientFlowCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM'],
+                        datasets: [{
+                            label: 'Patients',
+                            data: [5, 12, 18, 25, 22, 28, 30, 35, 28, 20],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                display: true,
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        function getHourlyData() {
-            // Generate realistic hourly data
-            const baseData = [12, 19, 25, 22, 18, 15, 20, 24, 18];
-            return baseData.map(val => val + Math.floor(Math.random() * 5));
-        }
-        
-        // Handle sidebar item clicks to update active state
-        document.addEventListener('click', function(e) {
-            const sidebarItem = e.target.closest('.sidebar-item');
-            if (sidebarItem && !sidebarItem.closest('#userInfo')) {
-                const items = document.querySelectorAll('.sidebar-item');
-                items.forEach(item => {
-                    if (!item.closest('#userInfo')) {
-                        item.classList.remove('active');
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
                     }
                 });
-                sidebarItem.classList.add('active');
             }
-        });
+            
+            const deptCtx = document.getElementById('departmentChart');
+            if (deptCtx) {
+                const departments = ['Emergency', 'Outpatient', 'Cardiology', 'Pediatrics', 'Orthopedics'];
+                const counts = departments.map(dept => tokens.filter(t => t.department === dept).length);
+                
+                new Chart(deptCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: departments,
+                        datasets: [{
+                            data: counts,
+                            backgroundColor: ['#ef4444', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { size: 12 } } }
+                        }
+                    }
+                });
+            }
+        }
         
-        // Load initial data on page load
-        window.addEventListener('load', function() {
-            loadDashboard();
-            checkLoginStatus();
-        });
+        loadDashboard();
     </script>
 </body>
 </html>
